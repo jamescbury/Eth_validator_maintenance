@@ -5,6 +5,6 @@ I wrote this to help me update the services for validator node quickly.  My set 
 
 The script contains prompts/links to the release repo as well as a reminder for myself about which configuration I run (I've updated to the wrong one once or twice... not fun).
 
-## To Do:  I'd really like to add some functionality in here that checks the file hash to make sure my download was authentic.
+To Do:  I'd really like to add some functionality in here that checks the file hash to make sure my download was authentic.
 
 
