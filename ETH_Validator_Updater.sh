@@ -6,6 +6,14 @@ txtred=$(tput setaf 1) # set a variable to create red text for output
 txtbold=$(tput bold) # set a variable to create bold text for output
 txtreset=$(tput sgr0) # set a varaiable to reset the font for output
 
+# set up a function to write to an output log
+logfile="/home/jamescbury/ETH_Validator_Update_Log.txt"
+function output_log () {
+	elapsed_time=$(($SECONDS - $start_time)) # calculate the elapsed time
+	echo "$filename has been installed. Completed in ${elapsed_time} seconds" # let user know in the terminal that the install completed
+	echo "["$(date)"] Installed:" $filename "Total time:" ${elapsed_time} "seconds" >> ${logfile} # append a transaction to the end of the log.  If the file does not exist create it.
+	}
+
 # determine if script is being run as root ref: https://askubuntu.com/a/30157/8698
 if ! [ $(id -u) = 0 ]; then
    echo "The script needs to be run as root." >&2
@@ -26,6 +34,7 @@ echo "  2. Update Lighthouse"
 echo "  3. Update Mev-Boost"
 
 read choice
+start_time=$SECONDS #set the start time
 
 case $choice in
 	1) # Update Nethermind
@@ -45,7 +54,7 @@ case $choice in
 		# cleanup
 		rm $filename
 		rm -r nethermind
-		echo "$filename has been installed"
+		output_log #write to the output log
 		;;
 	2) # Update Lighthouse
 		echo -e "\n${txtred}${txtbold}You are about to update Lighthouse\n${txtreset}"
@@ -65,7 +74,7 @@ case $choice in
 		systemctl start lighthousebeacon # restart the beacon chain service
 		# cleanup
 		rm lighthouse $filename # remove the downloaded files
-		echo "$filename has been installed"
+		output_log #write to the output log
 		;;
 	3) # Update Mev-Boost
 		echo -e "\n${txtred}${txtbold}You are about to update mev-boost\n${txtreset}"
@@ -84,11 +93,11 @@ case $choice in
 		systemctl start mevboost # restart the service
 		# cleanup
 		rm mev-boost LICENSE README.md $filename # remove the downloaded files
-		echo "$filename has been installed"
+		output_log #write to the output log
 		;;
 	*) # Invalid option selected
 		echo "Invaild choice.  Please enter 1, 2, or 3."
 		exit 1
 		;;
 esac
-			
+		
